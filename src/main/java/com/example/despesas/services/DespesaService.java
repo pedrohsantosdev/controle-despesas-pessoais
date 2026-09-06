@@ -10,18 +10,22 @@ import java.util.Optional;
 @Service
 public class DespesaService {
 
-    private final DespesaRepository despensaRepository;
+    private final DespesaRepository despesaRepository;
 
     public DespesaService(DespesaRepository despensaRepository) {
-        this.despensaRepository = despensaRepository;
+        this.despesaRepository = despensaRepository;
     }
 
     public List<Despesa> listarDespesas() {
-        return despensaRepository.findAll();
+        return despesaRepository.findAll();
     }
 
     public Despesa buscarDespesaPorId(Long id) {
-        Optional<Despesa> obj = despensaRepository.findById(id);
+        Optional<Despesa> obj = despesaRepository.findById(id);
         return obj.get();
+    }
+
+    public Despesa cadastrarDespesa(Despesa obj) {
+        return despesaRepository.save(obj);
     }
 }
