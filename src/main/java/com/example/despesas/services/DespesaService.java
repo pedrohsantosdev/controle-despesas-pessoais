@@ -12,8 +12,8 @@ public class DespesaService {
 
     private final DespesaRepository despesaRepository;
 
-    public DespesaService(DespesaRepository despensaRepository) {
-        this.despesaRepository = despensaRepository;
+    public DespesaService(DespesaRepository despesaRepository) {
+        this.despesaRepository = despesaRepository;
     }
 
     public List<Despesa> listarDespesas() {
@@ -27,5 +27,18 @@ public class DespesaService {
 
     public Despesa cadastrarDespesa(Despesa obj) {
         return despesaRepository.save(obj);
+    }
+
+    public Despesa atualizarDespesa(Long id, Despesa novosDados) {
+        Despesa dadosAtuais = despesaRepository.getReferenceById(id);
+        atualizarDados(dadosAtuais, novosDados);
+        return despesaRepository.save(dadosAtuais);
+    }
+
+    private void atualizarDados(Despesa dadosAtuais, Despesa novosDados) {
+        dadosAtuais.setDescricao(novosDados.getDescricao());
+        dadosAtuais.setValor(novosDados.getValor());
+        dadosAtuais.setDataVencimento(novosDados.getDataVencimento());
+        dadosAtuais.setPaga(novosDados.getPaga());
     }
 }

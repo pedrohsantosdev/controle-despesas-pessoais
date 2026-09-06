@@ -35,4 +35,12 @@ public class DespesaResource {
         obj = service.cadastrarDespesa(obj);
         return ResponseEntity.status(HttpStatus.CREATED).body(obj);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<Despesa> atualizarDespesa(@PathVariable Long id, @RequestBody Despesa obj) {
+        obj = service.atualizarDespesa(id, obj);
+        return ResponseEntity.ok().body(obj);
+    }
+
+
 }
