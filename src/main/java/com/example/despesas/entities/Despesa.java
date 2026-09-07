@@ -4,6 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -15,15 +18,22 @@ public class Despesa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "A descrição é obrigatória")
     private String descricao;
+
+    @NotNull(message = "O valor da conta é obrigatório")
+    @Positive(message = "O valor deve ser maior que zero")
     private Double valor;
+
+    @NotNull(message = "A data de vencimento é obrigatória")
     private LocalDate dataVencimento;
+
     private boolean paga;
 
     public Despesa() {
     }
 
-    public Despesa(Long id, String descricao, Double valor, LocalDate dataVencimento, Boolean paga) {
+    public Despesa(Long id, String descricao, Double valor, LocalDate dataVencimento, boolean paga) {
         this.id = id;
         this.descricao = descricao;
         this.valor = valor;
@@ -63,11 +73,11 @@ public class Despesa {
         this.dataVencimento = dataVencimento;
     }
 
-    public Boolean getPaga() {
+    public boolean isPaga() {
         return paga;
     }
 
-    public void setPaga(Boolean paga) {
+    public void setPaga(boolean paga) {
         this.paga = paga;
     }
 

@@ -2,6 +2,7 @@ package com.example.despesas.resources;
 
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.services.DespesaService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,13 +32,13 @@ public class DespesaResource {
     }
 
     @PostMapping
-    public ResponseEntity<Despesa> cadastrarDespesa(@RequestBody Despesa obj) {
+    public ResponseEntity<Despesa> cadastrarDespesa(@Valid @RequestBody Despesa obj) {
         obj = service.cadastrarDespesa(obj);
         return ResponseEntity.status(HttpStatus.CREATED).body(obj);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Despesa> atualizarDespesa(@PathVariable Long id, @RequestBody Despesa obj) {
+    public ResponseEntity<Despesa> atualizarDespesa(@PathVariable Long id,@Valid @RequestBody Despesa obj) {
         obj = service.atualizarDespesa(id, obj);
         return ResponseEntity.ok().body(obj);
     }

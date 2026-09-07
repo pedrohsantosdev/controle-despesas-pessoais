@@ -2,10 +2,11 @@ package com.example.despesas.services;
 
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.repositories.DespesaRepository;
+import com.example.despesas.services.exceptions.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DespesaService {
@@ -21,16 +22,17 @@ public class DespesaService {
     }
 
     public Despesa buscarDespesaPorId(Long id) {
-        Optional<Despesa> obj = despesaRepository.findById(id);
-        return obj.get();
+        return despesaRepository.findById(id).
+                orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
     public Despesa cadastrarDespesa(Despesa obj) {
         return despesaRepository.save(obj);
     }
 
+    @Transactional
     public Despesa atualizarDespesa(Long id, Despesa novosDados) {
-        Despesa dadosAtuais = despesaRepository.getReferenceById(id);
+        Despesa dadosAtuais = buscarDespesaPorId(id);
         atualizarDados(dadosAtuais, novosDados);
         return despesaRepository.save(dadosAtuais);
     }
@@ -39,10 +41,12 @@ public class DespesaService {
         dadosAtuais.setDescricao(novosDados.getDescricao());
         dadosAtuais.setValor(novosDados.getValor());
         dadosAtuais.setDataVencimento(novosDados.getDataVencimento());
-        dadosAtuais.setPaga(novosDados.getPaga());
+        dadosAtuais.setPaga(novosDados.isPaga());
     }
 
+    @Transactional
     public void deletarDespesa(Long id) {
-        despesaRepository.deleteById(id);
+        Despesa obj = buscarDespesaPorId(id);
+        despesaRepository.delete(obj);
     }
 }
