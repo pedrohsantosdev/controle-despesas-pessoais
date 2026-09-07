@@ -1,5 +1,6 @@
 package com.example.despesas.resources;
 
+import com.example.despesas.dtos.ResumoDespesasDTO;
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.services.DespesaService;
 import jakarta.validation.Valid;
@@ -49,6 +50,17 @@ public class DespesaResource {
                                                                  LocalDate fim) {
         List<Despesa> list = service.listarDespesasPorPeriodo(inicio, fim);
         return ResponseEntity.ok().body(list);
+    }
+
+    @GetMapping(value = "/resumo")
+    public ResponseEntity<ResumoDespesasDTO> resumirDespesasPorPeriodo(@RequestParam(name = "inicio")
+                                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                                       LocalDate inicio,
+                                                                       @RequestParam(name = "fim")
+                                                                       @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
+                                                                       LocalDate fim) {
+        ResumoDespesasDTO obj = service.resumirDespesasPorPeriodo(inicio, fim);
+        return ResponseEntity.ok().body(obj);
     }
 
     @PostMapping

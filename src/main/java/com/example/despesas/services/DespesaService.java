@@ -1,5 +1,6 @@
 package com.example.despesas.services;
 
+import com.example.despesas.dtos.ResumoDespesasDTO;
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.repositories.DespesaRepository;
 import com.example.despesas.services.exceptions.InvalidDate;
@@ -71,5 +72,25 @@ public class DespesaService {
             throw new InvalidDate("Data de início não deve estar após a data final");
         }
         return despesaRepository.findByDataVencimentoBetween(inicio, fim);
+    }
+
+    public ResumoDespesasDTO resumirDespesasPorPeriodo(LocalDate inicio, LocalDate fim) {
+        List<Despesa> list = listarDespesasPorPeriodo(inicio, fim);
+        double totalPago = 0.0;
+        double totalPendende = 0.0;
+
+        for(Despesa d : list) {
+            if(d.isPaga()) {
+                totalPago += d.getValor();
+            }
+            if(!d.isPaga()) {
+                totalPendende += d.getValor();
+            }
+        }
+
+        double total = totalPago + totalPendende;
+
+        ResumoDespesasDTO obj = new ResumoDespesasDTO(total, totalPago, totalPendende);
+        return obj;
     }
 }
