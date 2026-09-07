@@ -41,4 +41,8 @@ public class DespesaService {
         dadosAtuais.setDataVencimento(novosDados.getDataVencimento());
         dadosAtuais.setPaga(novosDados.getPaga());
     }
+
+    public void deletarDespesa(Long id) {
+        despesaRepository.deleteById(id);
+    }
 }

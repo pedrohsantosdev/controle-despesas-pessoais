@@ -42,5 +42,9 @@ public class DespesaResource {
         return ResponseEntity.ok().body(obj);
     }
 
-
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> deletarDespesa(@PathVariable Long id) {
+        service.deletarDespesa(id);
+        return ResponseEntity.noContent().build();
+    }
 }
