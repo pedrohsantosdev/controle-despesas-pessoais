@@ -8,13 +8,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Entity
-public class Despesa {
+public class Despesa implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
