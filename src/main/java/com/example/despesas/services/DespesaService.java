@@ -6,6 +6,7 @@ import com.example.despesas.services.exceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -51,5 +52,9 @@ public class DespesaService {
     public void deletarDespesa(Long id) {
         Despesa obj = buscarDespesaPorId(id);
         despesaRepository.delete(obj);
+    }
+
+    public List<Despesa> listarDespesasVencidas() {
+        return despesaRepository.findByPagaFalseAndDataVencimentoBefore(LocalDate.now());
     }
 }

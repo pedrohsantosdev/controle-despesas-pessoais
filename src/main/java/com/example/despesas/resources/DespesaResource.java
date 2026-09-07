@@ -3,7 +3,6 @@ package com.example.despesas.resources;
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.services.DespesaService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -31,6 +30,12 @@ public class DespesaResource {
     public ResponseEntity<Despesa> buscarDespesaPorId(@PathVariable Long id) {
         Despesa obj = service.buscarDespesaPorId(id);
         return ResponseEntity.ok().body(obj);
+    }
+
+    @GetMapping(value = "/vencidas")
+    public ResponseEntity<List<Despesa>> listarDespesasVencidas() {
+        List<Despesa> list = service.listarDespesasVencidas();
+        return ResponseEntity.ok().body(list);
     }
 
     @PostMapping
