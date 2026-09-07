@@ -6,7 +6,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -34,7 +36,8 @@ public class DespesaResource {
     @PostMapping
     public ResponseEntity<Despesa> cadastrarDespesa(@Valid @RequestBody Despesa obj) {
         obj = service.cadastrarDespesa(obj);
-        return ResponseEntity.status(HttpStatus.CREATED).body(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).body(obj);
     }
 
     @PutMapping(value = "/{id}")
