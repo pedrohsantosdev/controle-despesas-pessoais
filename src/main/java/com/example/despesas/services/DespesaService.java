@@ -17,7 +17,10 @@ public class DespesaService {
         this.despesaRepository = despesaRepository;
     }
 
-    public List<Despesa> listarDespesas() {
+    public List<Despesa> listarDespesas(Boolean paga) {
+        if(paga != null) {
+            return despesaRepository.findByPaga(paga);
+        }
         return despesaRepository.findAll();
     }
 
