@@ -46,7 +46,7 @@ public class DespesaResource {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Despesa> atualizarDespesa(@PathVariable Long id,@Valid @RequestBody Despesa obj) {
+    public ResponseEntity<Despesa> atualizarDespesa(@PathVariable Long id, @Valid @RequestBody Despesa obj) {
         obj = service.atualizarDespesa(id, obj);
         return ResponseEntity.ok().body(obj);
     }
@@ -55,5 +55,11 @@ public class DespesaResource {
     public ResponseEntity<Void> deletarDespesa(@PathVariable Long id) {
         service.deletarDespesa(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(value = "/{id}/pagar")
+    public ResponseEntity<Despesa> marcarDespesaComoPaga(@PathVariable Long id, @RequestBody Despesa obj) {
+        obj = service.marcarDespesaComoPaga(id);
+        return ResponseEntity.ok().body(obj);
     }
 }

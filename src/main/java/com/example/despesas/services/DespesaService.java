@@ -57,4 +57,11 @@ public class DespesaService {
     public List<Despesa> listarDespesasVencidas() {
         return despesaRepository.findByPagaFalseAndDataVencimentoBefore(LocalDate.now());
     }
+
+    @Transactional
+    public Despesa marcarDespesaComoPaga(Long id) {
+        Despesa obj = buscarDespesaPorId(id);
+        obj.setPaga(true);
+        return despesaRepository.save(obj);
+    }
 }
