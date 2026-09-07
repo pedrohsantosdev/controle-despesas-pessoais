@@ -2,6 +2,7 @@ package com.example.despesas.services;
 
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.repositories.DespesaRepository;
+import com.example.despesas.services.exceptions.InvalidDate;
 import com.example.despesas.services.exceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -63,5 +64,12 @@ public class DespesaService {
         Despesa obj = buscarDespesaPorId(id);
         obj.setPaga(true);
         return despesaRepository.save(obj);
+    }
+
+    public List<Despesa> listarDespesasPorPeriodo(LocalDate inicio, LocalDate fim) {
+        if(inicio.isAfter(fim)) {
+            throw new InvalidDate("Data de início não deve estar após a data final");
+        }
+        return despesaRepository.findByDataVencimentoBetween(inicio, fim);
     }
 }

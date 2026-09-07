@@ -1,5 +1,6 @@
 package com.example.despesas.resources.exceptions;
 
+import com.example.despesas.services.exceptions.InvalidDate;
 import com.example.despesas.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -35,4 +36,13 @@ public class ResourceExceptionHandler {
 
         return ResponseEntity.status(status).body(err);
     }
+
+    @ExceptionHandler(InvalidDate.class)
+    public ResponseEntity<StandardError> invalidDate(InvalidDate e, HttpServletRequest request) {
+        String error = "Data inválida";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
 }
