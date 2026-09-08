@@ -1,6 +1,7 @@
 package com.example.despesas.services;
 
 import com.example.despesas.dtos.ResumoDespesasDTO;
+import com.example.despesas.entities.Categoria;
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.repositories.DespesaRepository;
 import com.example.despesas.services.exceptions.InvalidDate;
@@ -15,9 +16,11 @@ import java.util.List;
 public class DespesaService {
 
     private final DespesaRepository despesaRepository;
+    private final CategoriaService categoriaService;
 
-    public DespesaService(DespesaRepository despesaRepository) {
+    public DespesaService(DespesaRepository despesaRepository, CategoriaService categoriaService) {
         this.despesaRepository = despesaRepository;
+        this.categoriaService = categoriaService;
     }
 
     public List<Despesa> listarDespesas(Boolean paga) {
@@ -33,12 +36,22 @@ public class DespesaService {
     }
 
     public Despesa cadastrarDespesa(Despesa obj) {
+        if(obj.getCategoria() != null) {
+            Categoria cat = categoriaService.buscarCategoriaPorId(obj.getCategoria().getId());
+            obj.setCategoria(cat);
+        }
         return despesaRepository.save(obj);
     }
 
     @Transactional
     public Despesa atualizarDespesa(Long id, Despesa novosDados) {
         Despesa dadosAtuais = buscarDespesaPorId(id);
+
+        if(novosDados.getCategoria() != null) {
+            Categoria cat = categoriaService.buscarCategoriaPorId(novosDados.getCategoria().getId());
+            novosDados.setCategoria(cat);
+        }
+        
         atualizarDados(dadosAtuais, novosDados);
         return despesaRepository.save(dadosAtuais);
     }
@@ -48,6 +61,7 @@ public class DespesaService {
         dadosAtuais.setValor(novosDados.getValor());
         dadosAtuais.setDataVencimento(novosDados.getDataVencimento());
         dadosAtuais.setPaga(novosDados.isPaga());
+        dadosAtuais.setCategoria(novosDados.getCategoria());
     }
 
     @Transactional
