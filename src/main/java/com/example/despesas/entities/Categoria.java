@@ -1,12 +1,12 @@
 package com.example.despesas.entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,6 +18,10 @@ public class Categoria implements Serializable {
 
     @NotBlank(message = "Nome da categoria é obrigatório")
     private String nome;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "categoria")
+    private List<Despesa> despesas = new ArrayList<>();
 
     public Categoria() {
     }
@@ -41,6 +45,10 @@ public class Categoria implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public List<Despesa> getDespesas() {
+        return despesas;
     }
 
     @Override
