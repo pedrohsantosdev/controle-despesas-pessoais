@@ -24,8 +24,9 @@ public class DespesaResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Despesa>> listarDespesas(@RequestParam(name = "paga", required = false) Boolean paga) {
-        List<Despesa> list = service.listarDespesas(paga);
+    public ResponseEntity<List<Despesa>> listarDespesas(@RequestParam(name = "paga", required = false) Boolean paga,
+                                                        @RequestParam(name = "categoriaId", required = false) Long categoriaId) {
+        List<Despesa> list = service.listarDespesas(paga, categoriaId);
         return ResponseEntity.ok().body(list);
     }
 

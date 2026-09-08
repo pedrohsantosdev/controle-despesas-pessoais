@@ -23,9 +23,15 @@ public class DespesaService {
         this.categoriaService = categoriaService;
     }
 
-    public List<Despesa> listarDespesas(Boolean paga) {
+    public List<Despesa> listarDespesas(Boolean paga, Long categoriaId) {
+        if(categoriaId != null && paga != null ) {
+            return despesaRepository.findByCategoria_IdAndPaga(categoriaId, paga);
+        }
         if(paga != null) {
             return despesaRepository.findByPaga(paga);
+        }
+        if(categoriaId != null) {
+            return despesaRepository.findByCategoria_Id(categoriaId);
         }
         return despesaRepository.findAll();
     }
@@ -51,7 +57,7 @@ public class DespesaService {
             Categoria cat = categoriaService.buscarCategoriaPorId(novosDados.getCategoria().getId());
             novosDados.setCategoria(cat);
         }
-        
+
         atualizarDados(dadosAtuais, novosDados);
         return despesaRepository.save(dadosAtuais);
     }

@@ -11,4 +11,6 @@ public interface DespesaRepository extends JpaRepository<Despesa, Long> {
     List<Despesa> findByPaga(Boolean paga);
     List<Despesa> findByPagaFalseAndDataVencimentoBefore(LocalDate data);
     List<Despesa> findByDataVencimentoBetween(LocalDate inicio, LocalDate fim);
+    List<Despesa> findByCategoria_Id(Long categoriaId);
+    List<Despesa> findByCategoria_IdAndPaga(Long categoriaId, Boolean paga);
 }
