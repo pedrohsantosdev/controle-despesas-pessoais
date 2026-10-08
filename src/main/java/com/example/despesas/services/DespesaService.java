@@ -1,5 +1,7 @@
 package com.example.despesas.services;
 
+import com.example.despesas.dtos.DespesaRequestDTO;
+import com.example.despesas.dtos.DespesaUpdateDTO;
 import com.example.despesas.dtos.ResumoDespesasDTO;
 import com.example.despesas.entities.Categoria;
 import com.example.despesas.entities.Despesa;
@@ -41,39 +43,41 @@ public class DespesaService {
                 orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public Despesa cadastrarDespesa(Despesa obj) {
-        if(obj.getCategoria() != null) {
-            Categoria cat = categoriaService.buscarCategoriaPorId(obj.getCategoria().getId());
-            obj.setCategoria(cat);
+    public Despesa cadastrarDespesa(DespesaRequestDTO dto) {
+        Despesa despesa = new Despesa(null, dto.descricao(), dto.valor(), dto.dataVencimento(), dto.paga());
+
+        if(despesa.getCategoria() != null) {
+            Categoria categoria = categoriaService.buscarCategoriaPorId(dto.categoriaId());
+            despesa.setCategoria(categoria);
         }
-        return despesaRepository.save(obj);
+        return despesaRepository.save(despesa);
     }
 
     @Transactional
-    public Despesa atualizarDespesa(Long id, Despesa novosDados) {
+    public Despesa atualizarDespesa(Long id, DespesaUpdateDTO novosDados) {
         Despesa dadosAtuais = buscarDespesaPorId(id);
 
-        if(novosDados.getCategoria() != null) {
-            Categoria cat = categoriaService.buscarCategoriaPorId(novosDados.getCategoria().getId());
-            novosDados.setCategoria(cat);
+        Categoria categoria = null;
+
+        if(novosDados.categoriaId() != null) {
+            categoria = categoriaService.buscarCategoriaPorId(novosDados.categoriaId());
         }
 
-        atualizarDados(dadosAtuais, novosDados);
+        atualizarDados(dadosAtuais, novosDados, categoria);
         return despesaRepository.save(dadosAtuais);
     }
 
-    private void atualizarDados(Despesa dadosAtuais, Despesa novosDados) {
-        dadosAtuais.setDescricao(novosDados.getDescricao());
-        dadosAtuais.setValor(novosDados.getValor());
-        dadosAtuais.setDataVencimento(novosDados.getDataVencimento());
-        dadosAtuais.setPaga(novosDados.isPaga());
-        dadosAtuais.setCategoria(novosDados.getCategoria());
+    private void atualizarDados(Despesa dadosAtuais, DespesaUpdateDTO novosDados, Categoria categoria) {
+        dadosAtuais.setDescricao(novosDados.descricao());
+        dadosAtuais.setValor(novosDados.valor());
+        dadosAtuais.setDataVencimento(novosDados.dataVencimento());
+        dadosAtuais.setCategoria(categoria);
     }
 
     @Transactional
     public void deletarDespesa(Long id) {
-        Despesa obj = buscarDespesaPorId(id);
-        despesaRepository.delete(obj);
+        Despesa despesa = buscarDespesaPorId(id);
+        despesaRepository.delete(despesa);
     }
 
     public List<Despesa> listarDespesasVencidas() {
@@ -82,9 +86,9 @@ public class DespesaService {
 
     @Transactional
     public Despesa marcarDespesaComoPaga(Long id) {
-        Despesa obj = buscarDespesaPorId(id);
-        obj.setPaga(true);
-        return despesaRepository.save(obj);
+        Despesa despesa = buscarDespesaPorId(id);
+        despesa.setPaga(true);
+        return despesaRepository.save(despesa);
     }
 
     public List<Despesa> listarDespesasPorPeriodo(LocalDate inicio, LocalDate fim) {
@@ -110,7 +114,7 @@ public class DespesaService {
 
         double total = totalPago + totalPendende;
 
-        ResumoDespesasDTO obj = new ResumoDespesasDTO(total, totalPago, totalPendende);
-        return obj;
+        ResumoDespesasDTO resumo = new ResumoDespesasDTO(total, totalPago, totalPendende);
+        return resumo;
     }
 }

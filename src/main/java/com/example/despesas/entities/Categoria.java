@@ -16,7 +16,6 @@ public class Categoria implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Nome da categoria é obrigatório")
     private String nome;
 
     @JsonIgnore

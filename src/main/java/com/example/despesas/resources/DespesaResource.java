@@ -1,5 +1,9 @@
 package com.example.despesas.resources;
 
+import com.example.despesas.dtos.DespesaRequestDTO;
+import com.example.despesas.dtos.DespesaResponseDTO;
+import com.example.despesas.dtos.DespesaUpdateDTO;
+import com.example.despesas.dtos.ResumoDespesasDTO;
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.services.DespesaService;
 import jakarta.validation.Valid;
@@ -23,33 +27,46 @@ public class DespesaResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Despesa>> listarDespesas(@RequestParam(name = "paga", required = false) Boolean paga,
-                                                        @RequestParam(name = "categoriaId", required = false) Long categoriaId) {
+    public ResponseEntity<List<DespesaResponseDTO>> listarDespesas(@RequestParam(name = "paga", required = false) Boolean paga,
+                                                                   @RequestParam(name = "categoriaId", required = false) Long categoriaId) {
+
         List<Despesa> list = service.listarDespesas(paga, categoriaId);
-        return ResponseEntity.ok().body(list);
+        List<DespesaResponseDTO> despesasDto = list.stream()
+                .map(despesa -> new DespesaResponseDTO(despesa)).toList();
+
+        return ResponseEntity.ok().body(despesasDto);
+
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Despesa> buscarDespesaPorId(@PathVariable Long id) {
-        Despesa obj = service.buscarDespesaPorId(id);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<DespesaResponseDTO> buscarDespesaPorId(@PathVariable Long id) {
+        Despesa despesa = service.buscarDespesaPorId(id);
+        return ResponseEntity.ok().body(new DespesaResponseDTO(despesa));
     }
 
     @GetMapping(value = "/vencidas")
-    public ResponseEntity<List<Despesa>> listarDespesasVencidas() {
+    public ResponseEntity<List<DespesaResponseDTO>> listarDespesasVencidas() {
         List<Despesa> list = service.listarDespesasVencidas();
-        return ResponseEntity.ok().body(list);
+        List<DespesaResponseDTO> despesasDto = list.stream()
+                .map(despesa -> new DespesaResponseDTO(despesa)).toList();
+
+        return ResponseEntity.ok().body(despesasDto);
     }
 
     @GetMapping(value = "/periodo")
-    public ResponseEntity<List<Despesa>> listarDespesaPorPeriodo(@RequestParam(name = "inicio")
+    public ResponseEntity<List<DespesaResponseDTO>> listarDespesaPorPeriodo(@RequestParam(name = "inicio")
                                                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                                  LocalDate inicio,
                                                                  @RequestParam(name = "fim")
                                                                  @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                                  LocalDate fim) {
+
         List<Despesa> list = service.listarDespesasPorPeriodo(inicio, fim);
-        return ResponseEntity.ok().body(list);
+        List<DespesaResponseDTO> despesasDto = list.stream()
+                        .map(despesa -> new DespesaResponseDTO(despesa)).toList();
+
+        return ResponseEntity.ok().body(despesasDto);
+
     }
 
     @GetMapping(value = "/resumo")
@@ -59,21 +76,22 @@ public class DespesaResource {
                                                                        @RequestParam(name = "fim")
                                                                        @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
                                                                        LocalDate fim) {
-        ResumoDespesasDTO obj = service.resumirDespesasPorPeriodo(inicio, fim);
-        return ResponseEntity.ok().body(obj);
+
+        ResumoDespesasDTO resumo = service.resumirDespesasPorPeriodo(inicio, fim);
+        return ResponseEntity.ok().body(resumo);
     }
 
     @PostMapping
-    public ResponseEntity<Despesa> cadastrarDespesa(@Valid @RequestBody Despesa obj) {
-        obj = service.cadastrarDespesa(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<DespesaResponseDTO> cadastrarDespesa(@Valid @RequestBody DespesaRequestDTO dto) {
+        Despesa despesa = service.cadastrarDespesa(dto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(despesa.getId()).toUri();
+        return ResponseEntity.created(uri).body(new DespesaResponseDTO(despesa));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Despesa> atualizarDespesa(@PathVariable Long id, @Valid @RequestBody Despesa obj) {
-        obj = service.atualizarDespesa(id, obj);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<DespesaResponseDTO> atualizarDespesa(@PathVariable Long id, @Valid @RequestBody DespesaUpdateDTO dto) {
+        Despesa despesa = service.atualizarDespesa(id, dto);
+        return ResponseEntity.ok().body(new DespesaResponseDTO(despesa));
     }
 
     @DeleteMapping(value = "/{id}")
@@ -83,8 +101,8 @@ public class DespesaResource {
     }
 
     @PatchMapping(value = "/{id}/pagar")
-    public ResponseEntity<Despesa> marcarDespesaComoPaga(@PathVariable Long id) {
-        Despesa obj = service.marcarDespesaComoPaga(id);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<DespesaResponseDTO> marcarDespesaComoPaga(@PathVariable Long id) {
+        Despesa despesa = service.marcarDespesaComoPaga(id);
+        return ResponseEntity.ok().body(new DespesaResponseDTO(despesa));
     }
 }

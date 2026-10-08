@@ -1,10 +1,6 @@
 package com.example.despesas.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -16,14 +12,10 @@ public class Despesa implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "A descrição é obrigatória")
     private String descricao;
 
-    @NotNull(message = "O valor da conta é obrigatório")
-    @Positive(message = "O valor deve ser maior que zero")
     private Double valor;
 
-    @NotNull(message = "A data de vencimento é obrigatória")
     private LocalDate dataVencimento;
 
     private boolean paga;
