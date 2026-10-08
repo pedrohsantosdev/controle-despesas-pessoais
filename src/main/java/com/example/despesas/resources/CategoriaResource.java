@@ -1,5 +1,7 @@
 package com.example.despesas.resources;
 
+import com.example.despesas.dtos.CategoriaRequestDTO;
+import com.example.despesas.dtos.CategoriaResponseDTO;
 import com.example.despesas.entities.Categoria;
 import com.example.despesas.services.CategoriaService;
 import jakarta.validation.Valid;
@@ -21,28 +23,30 @@ public class CategoriaResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> listarCategorias() {
+    public ResponseEntity<List<CategoriaResponseDTO>> listarCategorias() {
         List<Categoria> list = service.listarCategorias();
-        return ResponseEntity.ok().body(list);
+        List<CategoriaResponseDTO> categorias = list.stream()
+                .map(categoria -> new CategoriaResponseDTO(categoria)).toList();
+        return ResponseEntity.ok().body(categorias);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Categoria> buscarCategoriaPorId(@PathVariable Long id) {
+    public ResponseEntity<CategoriaResponseDTO> buscarCategoriaPorId(@PathVariable Long id) {
         Categoria obj = service.buscarCategoriaPorId(id);
-        return ResponseEntity.ok().body(obj);
+        return ResponseEntity.ok().body(new CategoriaResponseDTO(obj));
     }
 
     @PostMapping
-    public ResponseEntity<Categoria> cadastrarCategoria(@Valid @RequestBody Categoria obj) {
-        obj = service.cadastrarCategoria(obj);
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(obj.getId()).toUri();
-        return ResponseEntity.created(uri).body(obj);
+    public ResponseEntity<CategoriaResponseDTO> cadastrarCategoria(@Valid @RequestBody CategoriaRequestDTO requestDTO) {
+        Categoria categoria = service.cadastrarCategoria(requestDTO);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(categoria.getId()).toUri();
+        return ResponseEntity.created(uri).body(new CategoriaResponseDTO(categoria));
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Categoria> atualizarCategoria(@PathVariable Long id, @Valid @RequestBody Categoria obj) {
-        obj = service.atualizarCategoria(id, obj);
-        return ResponseEntity.ok().body(obj);
+    public ResponseEntity<CategoriaResponseDTO> atualizarCategoria(@PathVariable Long id, @Valid @RequestBody CategoriaRequestDTO requestDTO) {
+        Categoria categoria = service.atualizarCategoria(id, requestDTO);
+        return ResponseEntity.ok().body(new CategoriaResponseDTO(categoria));
     }
 
     @DeleteMapping(value = "/{id}")
