@@ -1,6 +1,5 @@
 package com.example.despesas.resources;
 
-import com.example.despesas.dtos.ResumoDespesasDTO;
 import com.example.despesas.entities.Despesa;
 import com.example.despesas.services.DespesaService;
 import jakarta.validation.Valid;

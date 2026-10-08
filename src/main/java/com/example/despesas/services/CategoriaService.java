@@ -1,12 +1,12 @@
 package com.example.despesas.services;
 
+import com.example.despesas.dtos.CategoriaRequestDTO;
 import com.example.despesas.entities.Categoria;
 import com.example.despesas.repositories.CategoriaRepository;
 import com.example.despesas.repositories.DespesaRepository;
 import com.example.despesas.services.exceptions.DataBaseException;
 import com.example.despesas.services.exceptions.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,12 +30,13 @@ public class CategoriaService {
         return categoriaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id));
     }
 
-    public Categoria cadastrarCategoria(Categoria obj) {
+    public Categoria cadastrarCategoria(CategoriaRequestDTO dto) {
+        Categoria obj = new Categoria(null, dto.nome());
         return categoriaRepository.save(obj);
     }
 
     @Transactional
-    public Categoria atualizarCategoria(Long id, Categoria novosDados) {
+    public Categoria atualizarCategoria(Long id, CategoriaRequestDTO novosDados) {
         Categoria obj = buscarCategoriaPorId(id);
         atualizarDados(obj, novosDados);
         return categoriaRepository.save(obj);
@@ -50,8 +51,8 @@ public class CategoriaService {
             categoriaRepository.delete(obj);
     }
 
-    private void atualizarDados(Categoria obj, Categoria novosDados) {
-        obj.setNome(novosDados.getNome());
+    private void atualizarDados(Categoria obj, CategoriaRequestDTO novosDados) {
+        obj.setNome(novosDados.nome());
     }
 
     public boolean possuiDespesas(Long id) {
