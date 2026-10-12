@@ -70,6 +70,7 @@ public class CategoriaServiceTest {
         Categoria resultado = categoriaService.buscarCategoriaPorId(1L);
 
         assertSame(categoria, resultado);
+        verify(categoriaRepository).findById(1L);
 
     }
 

@@ -25,7 +25,7 @@ public class DespesaService {
         this.categoriaService = categoriaService;
     }
 
-    public List<Despesa> listarDespesas(Boolean paga, Long categoriaId) {
+    public List<Despesa> listarDespesas(Long categoriaId, Boolean paga) {
         if(categoriaId != null && paga != null ) {
             return despesaRepository.findByCategoria_IdAndPaga(categoriaId, paga);
         }
@@ -44,12 +44,14 @@ public class DespesaService {
     }
 
     public Despesa cadastrarDespesa(DespesaRequestDTO dto) {
+
         Despesa despesa = new Despesa(null, dto.descricao(), dto.valor(), dto.dataVencimento(), dto.paga());
 
-        if(despesa.getCategoria() != null) {
+        if(dto.categoriaId() != null) {
             Categoria categoria = categoriaService.buscarCategoriaPorId(dto.categoriaId());
             despesa.setCategoria(categoria);
         }
+
         return despesaRepository.save(despesa);
     }
 

@@ -30,7 +30,7 @@ public class DespesaResource {
     public ResponseEntity<List<DespesaResponseDTO>> listarDespesas(@RequestParam(name = "paga", required = false) Boolean paga,
                                                                    @RequestParam(name = "categoriaId", required = false) Long categoriaId) {
 
-        List<Despesa> list = service.listarDespesas(paga, categoriaId);
+        List<Despesa> list = service.listarDespesas(categoriaId, paga);
         List<DespesaResponseDTO> despesasDto = list.stream()
                 .map(despesa -> new DespesaResponseDTO(despesa)).toList();
 
