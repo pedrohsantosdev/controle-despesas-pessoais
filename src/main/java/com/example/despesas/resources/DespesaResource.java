@@ -27,14 +27,15 @@ public class DespesaResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<DespesaResponseDTO>> listarDespesas(@RequestParam(name = "paga", required = false) Boolean paga,
-                                                                   @RequestParam(name = "categoriaId", required = false) Long categoriaId) {
+    public ResponseEntity<List<DespesaResponseDTO>> listarDespesas(@RequestParam(name = "categoriaId", required = false) Long categoriaId,
+                                                                   @RequestParam(name = "paga", required = false) Boolean paga
+                                                                   ) {
 
         List<Despesa> list = service.listarDespesas(categoriaId, paga);
-        List<DespesaResponseDTO> despesasDto = list.stream()
+        List<DespesaResponseDTO> despesasDTO = list.stream()
                 .map(despesa -> new DespesaResponseDTO(despesa)).toList();
 
-        return ResponseEntity.ok().body(despesasDto);
+        return ResponseEntity.ok().body(despesasDTO);
 
     }
 
