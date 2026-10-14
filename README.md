@@ -39,6 +39,26 @@ A API fica disponível em [http://localhost:8080](http://localhost:8080). As req
 
 O banco H2 é configurado em `src/main/resources/application.properties`. O console pode ser acessado em [http://localhost:8080/h2-console](http://localhost:8080/h2-console), utilizando a URL JDBC e as credenciais definidas nesse arquivo.
 
+## Testes
+
+Com o JDK 25 instalado, execute a suíte pelo Maven Wrapper:
+
+```powershell
+.\mvnw.cmd test
+```
+
+No Linux ou macOS, use `./mvnw test`.
+
+Os testes de serviços usam Mockito; os de endpoints usam MockMvc com serviços simulados.
+Os testes de repositórios executam as consultas JPA no H2, e os de integração verificam
+o fluxo da API com serviços e repositórios reais, incluindo cadastro, pagamento,
+atualização, exclusão, filtros e resumo por período.
+
+O perfil `test`, configurado em `src/test/resources/application-test.properties`,
+utiliza um banco H2 em memória e não exige Docker nem credenciais do MySQL.
+Esses testes não validam particularidades do MySQL. Os relatórios ficam em
+`target/surefire-reports`.
+
 ## Endpoints
 
 | Método | Rota | Operação |
